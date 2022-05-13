@@ -1972,11 +1972,15 @@ router.get('/tags/:tag', controller.getByTag);  // 2.10. Listando os Produtos de
     ]
 ```
 
-GET &rarr; http://localhost:3000/products/tags/informatica &rarr; Send
-GET &rarr; http://localhost:3000/products/tags/mouse &rarr; Send
-GET &rarr; http://localhost:3000/products/tags/game &rarr; Send
+- GET &rarr; http://localhost:3000/products/tags/informatica &rarr; Send
+
+- GET &rarr; http://localhost:3000/products/tags/mouse &rarr; Send
+
+- GET &rarr; http://localhost:3000/products/tags/game &rarr; Send
  
-- Vai apresentar/responder JSON com os dados da tag do produto:
+<br>
+
+- Vai responder (req) | (request) , listandos o produto pela tag  :
 
 ```js
 {
@@ -1997,7 +2001,8 @@ GET &rarr; http://localhost:3000/products/tags/game &rarr; Send
 
 ## 2.11. Atualizando um produto
 
-- Vamos atualizar o método PUT, _findByIdAndUpdate( )_ para atualizar um produto.
+- Vamos atualizar o método PUT, 
+  - _findByIdAndUpdate( )_ para atualizar um produto.
 
 - Vamos atualizar o arquivo **products-controller.js**
 
@@ -2039,7 +2044,7 @@ O arquivo a rota ( **product-routes.js** ) do PUT já está atualizado.
 router.put('/:id', controller.put); 
 ```
 
-## Postman - Atualizando um produto 
+## Postman &rarr; PUT - Atualizando um produto 
 
 PUT &rarr; http://localhost:3000/products/627da2cd5346e6176f36fd41 &rarr; Send
 
@@ -2069,7 +2074,7 @@ PUT &rarr; http://localhost:3000/products/627da2cd5346e6176f36fd41 &rarr; Send
 ```
 
 
-## Postman - Verificando se o produto foi atualizado 
+## Postman &rarr; GET - Verificando se o produto foi atualizado 
 
 GET &rarr; http://localhost:3000/products/ &rarr; Send
 
@@ -2286,7 +2291,9 @@ router.delete('/', controller.delete);          // DELETE - Delete -> Excluir um
 module.exports = router;                        //  exportar o modulo router
 ```
 
-### Postman 
+<br>
+
+### Postman &rarr; DELETE
 
 DELETE &rarr; http://localhost:3000/products/ &rarr; Send
 
@@ -2314,13 +2321,9 @@ DELETE &rarr; http://localhost:3000/products/ &rarr; Send
 ## MongoDB
 
 - Será deletado o nosso produto no MongoDB, da tabela (banco.products)
-- Portanto, não será apresentado nenhum produto.
+- Assim, não será apresentado nenhum produto nosso banco de dados, MongoDB.
 
 <br>
-
-- Assim, ao realizar uma consultado de Products no Postman:
- GET &rarr; http://localhost:3000/products/ 
- - Mostra nenhum dado!, ou seja, mostra um Array vazio, <code> [] </code> 
 
 - Portanto, realizamos todos verbos HTTP API, nosso banco de dados NoSQL, MongoDB.
 
@@ -2338,17 +2341,21 @@ DELETE &rarr; http://localhost:3000/products/ &rarr; Send
 
 ## 2.13. Validações
 
-- Vamos configurar algumas validações fora do mongose, mongoose.Schema.
-- Temos alguns cenários que precisamos validar os input, onde os dados que utilizam outros serviços.
-- Assim, vamos criamos nossa validação separada do mongoose.
-- Conceito é mostrar uma lista de erros, temos alguns métodos que realizam algumas validações.
-- Temos um retorno de uma lista de erros.
+- Vamos configurar algumas validações fora do mongose, _mongoose.Schema_.
+- Temos alguns cenários que precisamos validar os input, onde os dados podem utilizam outros serviços.
+- Assim, vamos criamos algumas validações separada do mongoose.
+
+<br>
+
+- O Objetivo das validações é mostrar uma lista de erros, pois temos alguns métodos que realizam algumas validações. Temos um retorno com uma lista de erros.
 
 <br>
 
 - No diretorio do projeto, source <code> src </code>. 
 - Vamos criar um diretorio chamado <code> validators </code>
 - Criar um arquivo <code> fluent-validator.js </code>
+
+### fluent-validator.js
 
 <code> src / validators / **fluent-validator.js** </code>
 
@@ -2402,32 +2409,10 @@ ValidationContract.prototype.isValid = () => {
 module.exports = ValidationContract;
 ```
 
-## Postman 
-
-DELETE &rarr; http://localhost:3000/products/ &rarr; Send
-
-  - raw
-  - JSON
-
 <br>
 
-- req (requisição) (REQUEST)
+### products-controller
 
-```js
-{
-    "id": "627da2cd5346e6176f36fd41"
-}
-```
-
-- RES (resposta) (RESPONSE)
-
-```json
-{
-    "message": "Produto removido com sucesso!"
-}
-```
-
-Atualizar o arquivo **products-controller.js** para importar o arquivo de validações.
 
 <code> src / controllers / **products-controller.js** </code>
 
@@ -2573,16 +2558,16 @@ exports.delete = (req, res, next) => {
 ```
 
 
-## Postman 
+## Postman &rarr; POST (Validação)
 
-POST http://localhost:3000/products/
+POST &rarr; http://localhost:3000/products/
 
   - raw
   - JSON
 
 <br>
 
-- **req** (requisição) (REQUEST)
+- **req** (requisição) (REQUEST) - Exemplo:
   - O "title" colocamos vazio;
   - O "slug" colocamos com dois digitos;
   - O "description" colocamos com dois digitos;
@@ -2674,16 +2659,8 @@ Em seguida, vamos atualizar o **product-controller.js**
 ```js
 'use strict';
 const mongoose = require('mongoose');
-const Product = mongoose.model('Product'); // faz o acesso aos dados
 
-
-// POST - Create -> Criar um recurso (req)
-
-// 2.6. Criando um Produto (√)
-exports.create = (data) => {
-    var product = new Product(data); // criar instancia do product
-    return product.save();
-}
+const Product = mongoose.model('Product'); // importar o Model, ele faz o acesso aos dados
 
 // GET - Read (Ler) - Recuperar um recurso (req) ou uma coleção de recursos
 
@@ -2694,7 +2671,7 @@ exports.get = () => {
 
 // 2.8. Listando um Produto pelo slug (√)
 exports.getBySlug = (slug) => {
-    return Product.findOne({ slug: req.params.slug, active: true }, 'title description price slug tags');
+    return Product.findOne({ slug: slug, active: true }, 'title description price slug tags');
 }
 
 // 2.9. Listando um Produto pelo (√)
@@ -2704,7 +2681,15 @@ exports.getById = (id) => {
 
 // 2.10. Listando os Produtos de uma tag (√)
 exports.getByTag = (tag) => {
-    return Product.find({ tags: req.params.tag, active: true }, 'title description price slug tags')
+    return Product.find({ tags: tag, active: true }, 'title description price slug tags')
+}
+
+// POST - Create -> Criar um recurso (req)
+
+// 2.6. Criando um Produto (√)
+exports.create = (data) => {
+    var product = new Product(data); // criar instancia do product
+    return product.save();
 }
 
 // PUT - Update -> Atualizar um recurso (req)
@@ -2738,15 +2723,13 @@ exports.delete = (id) => {
 ```js
 'use strict';
 
-// importações
+const mongoose = require('mongoose'); // importar o mongoose
 
-const mongoose = require('mongoose'); 
+const Product = mongoose.model('Product'); // importar o Product, mongoose.model
 
-const Product = mongoose.model('Product'); 
+const ValidationContract = require('../validators/fluent-validator'); // importar o  fluent-validator.js
 
-const ValidationContract = require('../validators/fluent-validator'); 
-
-const repository = require('../repositories/product-repository'); 
+const repository = require('../repositories/product-repository'); // importar o product-repository
 
 // POST - Create -> Criar um recurso (req)
 
@@ -2828,7 +2811,7 @@ exports.getByTag = (req, res, next) => {
 
 // 2.11. Atualizando um produto (√)
 exports.put = (req, res, next) => {
-    repository.update(req.params.id, req.params.body)
+    repository.update(req.params.id, req.body)
         .then(x => {
             res.status(200).send({ message: 'Produto atualizado com sucesso!' });
         })
