@@ -1,10 +1,18 @@
 # Criando APIs com NodeJs
 
-- Utilizando o padrão M V C
+- Utilizando o padrão **M V C**
 
   - M o d e l
   - V i e w
   - C o n t r o l l e r
+
+|  C R U D      |   R E S T                  |
+|---------------|----------------------------|
+| C r e a t e   |  &rarr; P O S T            |
+|  R e a d      |  &rarr; G E T              |   
+|  U p d a t e  |  &rarr; P U T / P A T C H  |   
+|  D e l e t e  |  &rarr; D E L E T E        |   
+
 
 ---
 
@@ -1989,7 +1997,7 @@ GET &rarr; http://localhost:3000/products/tags/game &rarr; Send
 
 ## 2.11. Atualizando um produto
 
-- Vamos atualizar o método PUT para atualizar um produto pela tag
+- Vamos atualizar o método PUT, _findByIdAndUpdate( )_ para atualizar um produto.
 
 - Vamos atualizar o arquivo **products-controller.js**
 
@@ -2103,13 +2111,913 @@ O produto no MongoDB foi atualizado de "mouse gamer" para "cadeira gamer"
 
 ---
 
-
-
 ## 2.12. Excluindo um produto
+
+- Vamos copiar o método anterior do PUT e atualizar o nosso método DELETE.
+
+- Nosso DELETE, usamos o método _findOneAndRemove()_
+
+- Vamos atualizar o arquivo **products-controller.js**
+
+<code> src / controllers / **products-controller.js** </code>
+
+```js
+'use strict';
+
+const mongoose = require('mongoose'); // importar o mongoose
+
+const Product = mongoose.model('Product'); // importar o Product, mongoose.model
+
+// POST - Create -> Criar um recurso (req)
+
+// 2.6. Criando um Produto
+exports.post = (req, res, next) => {
+    /**
+     * var product = new Product();
+     * product.title = req.body.title;
+     **/
+    var product = new Product(req.body); // criar instancia do product
+    product.save()
+        .then(x => {
+            res.status(201).send({ 
+                message: 'Produto cadastrado com sucesso!'
+            });
+        })
+        .catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao cadastrar ao produto!',
+                data: err
+            });
+    });
+}
+
+// GET - Read (Ler) - Recuperar um recurso (req) ou uma coleção de recursos
+
+// 2.7. Listando os Produtos
+exports.get = (req, res, next) => {
+    
+    // buscar todos os produtos
+    Product.find({ active: true }, 'title price slug')
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.8. Listando um Produto pelo slug
+exports.getBySlug = (req, res, next) => {
+    
+    Product.findOne({ slug: req.params.slug, active: true }, 'title description price slug tags')
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.9. Listando um Produto pelo Id
+exports.getById = (req, res, next) => {
+    
+    Product.findById(req.params.id)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.10. Listando os Produtos de uma tag
+exports.getByTag = (req, res, next) => {
+    
+    Product.find({ tags: req.params.tag, active: true }, 'title description price slug tags')
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+};
+
+// PUT - Update -> Atualizar um recurso (req)
+
+/*
+exports.put = (req, res, next) => {
+    const id = req.params.id;
+    res.status(200).send({ 
+        id: id,
+        item: req.body
+    });
+}; 
+*/
+
+// 2.11. Atualizando um produto
+exports.put = (req, res, next) => {
+
+    Product
+        .findByIdAndUpdate(req.params.id, {
+            $set: {
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price,
+                slug: req.body.slug
+            }
+        }).then(x => {
+            res.status(200).send({ 
+                message: 'Produto atualizado com sucesso!' 
+            });
+        }).catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao atualizar produto!', 
+                data: err 
+            });
+        });
+}
+
+// DELETE - Delete -> Excluir um recurso (req)
+
+// 2.12. Excluindo um produto
+exports.delete = (req, res, next) => {
+    
+    Product
+        .findOneAndRemove(req.body.id)
+        .then(x => {
+            res.status(200).send({ 
+                message: 'Produto removido com sucesso!' 
+            });
+        }).catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao remover produto!', 
+                data: err 
+            });
+        });
+}
+```
+
+O arquivo a rota ( **product-routes.js** ) do PUT já está atualizado.
+
+Como utilizamos _.findOneAndRemove(req.body.id)_ não precisamos ajudar a rota.
+
+Por exemplo:
+
+_.findByIdAndUpdate(req.params.id)_ &rarr; _router.delete('/:id', controller.delete)_;         
+
+_.findOneAndRemove(req.body.id)_ &rarr; _router.delete('/', controller.delete)_; 
+
+
+```js
+'use strict';
+
+const express = require('express'); 
+const router = express.Router();  
+const controller = require('../controllers/product-controller');
+
+router.get('/', controller.get);                // GET - Read -> Ler um recurso (req)
+router.get('/:slug', controller.getBySlug);     // 2.8. Listando um Produto pelo slug
+router.get('/admin/:id', controller.getById);   // 2.9. Listando um Produto pelo Id
+router.get('/tags/:tag', controller.getByTag);  // 2.10. Listando os Produtos de uma tag
+router.post('/', controller.post);              // POST - Create -> Criar um recurso (req)
+router.put('/:id', controller.put);             // PUT -  Update -> Atualizar um recurso (req)
+router.delete('/', controller.delete);          // DELETE - Delete -> Excluir um recurso (req)
+
+module.exports = router;                        //  exportar o modulo router
+```
+
+### Postman 
+
+DELETE &rarr; http://localhost:3000/products/ &rarr; Send
+
+  - raw
+  - JSON
+
+<br>
+
+- req (requisição) (REQUEST)
+
+```js
+{
+    "id": "627da2cd5346e6176f36fd41"
+}
+```
+
+- RES (resposta) (RESPONSE)
+
+```json
+{
+    "message": "Produto removido com sucesso!"
+}
+```
+
+## MongoDB
+
+- Será deletado o nosso produto no MongoDB, da tabela (banco.products)
+- Portanto, não será apresentado nenhum produto.
+
+<br>
+
+- Assim, ao realizar uma consultado de Products no Postman:
+ GET &rarr; http://localhost:3000/products/ 
+ - Mostra nenhum dado!, ou seja, mostra um Array vazio, <code> [] </code> 
+
+- Portanto, realizamos todos verbos HTTP API, nosso banco de dados NoSQL, MongoDB.
+
+<br>
+
+|  C R U D      |   R E S T                  |
+|---------------|----------------------------|
+| C r e a t e   |  &rarr; P O S T            |
+|  R e a d      |  &rarr; G E T              |   
+|  U p d a t e  |  &rarr; P U T / P A T C H  |   
+|  D e l e t e  |  &rarr; D E L E T E        |   
+
+
+---
 
 ## 2.13. Validações
 
-## 2.14. Repositórios
+- Vamos configurar algumas validações fora do mongose, mongoose.Schema.
+- Temos alguns cenários que precisamos validar os input, onde os dados que utilizam outros serviços.
+- Assim, vamos criamos nossa validação separada do mongoose.
+- Conceito é mostrar uma lista de erros, temos alguns métodos que realizam algumas validações.
+- Temos um retorno de uma lista de erros.
+
+<br>
+
+- No diretorio do projeto, source <code> src </code>. 
+- Vamos criar um diretorio chamado <code> validators </code>
+- Criar um arquivo <code> fluent-validator.js </code>
+
+<code> src / validators / **fluent-validator.js** </code>
+
+```js
+'use strict';
+
+let errors = [];
+
+function ValidationContract() {
+    errors = [];
+}
+
+ValidationContract.prototype.isRequired = (value, message) => {
+    if (!value || value.length <= 0)
+        errors.push({ message: message });
+}
+
+ValidationContract.prototype.hasMinLen = (value, min, message) => {
+    if (!value || value.length < min)
+        errors.push({ message: message });
+}
+
+ValidationContract.prototype.hasMaxLen = (value, max, message) => {
+    if (!value || value.length > max)
+        errors.push({ message: message });
+}
+
+ValidationContract.prototype.isFixedLen = (value, len, message) => {
+    if (value.length != len)
+        errors.push({ message: message });
+}
+
+ValidationContract.prototype.isEmail = (value, message) => {
+    var reg = new RegExp(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/);
+    if (!reg.test(value))
+        errors.push({ message: message });
+}
+
+ValidationContract.prototype.errors = () => { 
+    return errors; 
+}
+
+ValidationContract.prototype.clear = () => {
+    errors = [];
+}
+
+ValidationContract.prototype.isValid = () => {
+    return errors.length == 0;
+}
+
+module.exports = ValidationContract;
+```
+
+## Postman 
+
+DELETE &rarr; http://localhost:3000/products/ &rarr; Send
+
+  - raw
+  - JSON
+
+<br>
+
+- req (requisição) (REQUEST)
+
+```js
+{
+    "id": "627da2cd5346e6176f36fd41"
+}
+```
+
+- RES (resposta) (RESPONSE)
+
+```json
+{
+    "message": "Produto removido com sucesso!"
+}
+```
+
+Atualizar o arquivo **products-controller.js** para importar o arquivo de validações.
+
+<code> src / controllers / **products-controller.js** </code>
+
+```js
+'use strict';
+
+const mongoose = require('mongoose'); // importar o mongoose
+
+const Product = mongoose.model('Product'); // importar o Product, mongoose.model
+
+const ValidationContract = require('../validators/fluent-validator'); // importar o  fluent-validator.js
+
+// POST - Create -> Criar um recurso (req)
+
+// 2.6. Criando um Produto
+exports.post = (req, res, next) => {
+
+    // Validações
+    let constract = new ValidationContract();
+    constract.hasMinLen(req.body.title, 3, 'O "title" deve conter pelo menos 3 caracteres');
+    constract.hasMinLen(req.body.slug, 3, 'O "slug" deve conter pelo menos 3 caracteres');
+    constract.hasMinLen(req.body.description, 3, 'O "description" deve conter pelo menos 3 caracteres');
+
+    // Se os dados forem inváligos
+    if (!constract.isValid()) {
+        res.status(400).send(constract.errors()).end();
+        return;
+    }
+
+    /**
+     * var product = new Product();
+     * product.title = req.body.title;
+     **/
+    var product = new Product(req.body); // criar instancia do product
+    product.save()
+        .then(x => {
+            res.status(201).send({ 
+                message: 'Produto cadastrado com sucesso!'
+            });
+        })
+        .catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao cadastrar ao produto!',
+                data: err
+            });
+    });
+}
+
+// GET - Read (Ler) - Recuperar um recurso (req) ou uma coleção de recursos
+
+// 2.7. Listando os Produtos
+exports.get = (req, res, next) => {
+    
+    // buscar todos os produtos
+    Product.find({ active: true }, 'title price slug')
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.8. Listando um Produto pelo slug
+exports.getBySlug = (req, res, next) => {
+    
+    Product.findOne({ slug: req.params.slug, active: true }, 'title description price slug tags')
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.9. Listando um Produto pelo Id
+exports.getById = (req, res, next) => {
+    
+    Product.findById(req.params.id)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.10. Listando os Produtos de uma tag
+exports.getByTag = (req, res, next) => {
+    
+    Product.find({ tags: req.params.tag, active: true }, 'title description price slug tags')
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+};
+
+// PUT - Update -> Atualizar um recurso (req)
+
+// 2.11. Atualizando um produto
+exports.put = (req, res, next) => {
+
+    Product
+        .findByIdAndUpdate(req.params.id, {
+            $set: {
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price,
+                slug: req.body.slug
+            }
+        }).then(x => {
+            res.status(200).send({ 
+                message: 'Produto atualizado com sucesso!' 
+            });
+        }).catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao atualizar produto!', 
+                data: err 
+            });
+        });
+}
+
+// DELETE - Delete -> Excluir um recurso (req)
+
+// 2.12. Excluindo um produto
+exports.delete = (req, res, next) => {
+    
+    Product
+        .findOneAndRemove(req.body.id)
+        .then(x => {
+            res.status(200).send({ 
+                message: 'Produto removido com sucesso!' 
+            });
+        }).catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao remover produto!', 
+                data: err 
+            });
+        });
+}
+```
+
+
+## Postman 
+
+POST http://localhost:3000/products/
+
+  - raw
+  - JSON
+
+<br>
+
+- **req** (requisição) (REQUEST)
+  - O "title" colocamos vazio;
+  - O "slug" colocamos com dois digitos;
+  - O "description" colocamos com dois digitos;
+
+```js
+{
+    "title": "",
+    "slug":  "mo",
+    "description": "Mo",
+    "price": "299",
+    "active": true,
+    "tags": ["informatica", "mouse", "game"],
+    "image": "image"
+}
+```
+
+- **res** (resposta) (RESPONSE)
+
+  - Apresenta os erros das Validações, da function _ValidationContract()_
+
+```json
+[
+    {
+        "message": "O \"title\" deve conter pelo menos 3 caracteres"
+    },
+    {
+        "message": "O \"slug\" deve conter pelo menos 3 caracteres"
+    },
+    {
+        "message": "O \"description\" deve conter pelo menos 3 caracteres"
+    }
+]
+```
+
+
+---
+
+## 2.14. Repositórios (Repository Pattern)
+
+Vamos utilizar o padrão **Repository Pattern**.
+
+O **Repository Pattern** é um dos padrões de projeto mais utilizado e conhecidos no desenvolvimento de sistemas. 
+Sua utilização contribui no **isolamento da camada de acesso a dados** (DAL) com a **camada de negócio**, mais conhecida como **camada de domínio**.
+
+O Repository Pattern permite um encapsulamento da lógica de acesso a dados, impulsionando o uso da injeção de dependencia (DI) e proporcionando uma visão mais orientada a objetos das interações com a DAL.
+
+Com o uso desse pattern, aplicamos em nossa camada de domínio o princípio da persistência ignorante (PI), ou seja, **nossas entidades da camada de negócio, não devem sofrer impactos pela forma em que são persistidas no banco de dados**.
+
+**Os grandes benefícos ao utilizar Repository Pattern são**:
+
+- Permitir a troca do banco de dados utilizado sem afetar o sistema como um todo.
+- Código centralizado em um único ponto, evitando duplicidade.
+- Facilita a implementação de testes unitários.
+- Diminui o acoplamento entre classes.
+- Padronização de códigos e serviços.
+
+<br>
+
+Será implementado ao nosso projeto esse padrão, vamos delegar a responsabilidade de acesso a dados ao **repositories**. 
+Sua utilização faz isolamento da Camada de Acesso a Dados (DAL) dos Controlllers.
+O Repository Pattern permite um encapsulamento da lógica de acesso a dados.
+
+Por exemplo, preciso a lista de produtos. O Repository Pattern fica responsável por obter a lista de produtos. Não importa onde está a sua lista de produtos, não importa onde os produtos estão armazenados. O Repository Pattern armazena o produto no BD, somente peço a lista de produtos e a lista de produtos é retornada.
+
+Vamos configurar o **Repository Pattern** ao nosso projeto.
+
+Na pasta  <code> src </code>:
+
+  - Criar um diretório <code> repositories </code>
+
+  - Criar um arquivo <code> **product-repository.js** </code>
+
+<br>
+
+Vamos mover os métodos do _product-controller.js_ para _product-repository.js_
+
+Porém, os métodos de tratamentos de dados e erros, ou seja, 
+os métodos .then() e o .catch() precisam ficar no _product-repository.js_
+Depois de utilizamos o Async/Await vamos melhorar o nosso código, será nosso próximo tópico.
+
+Em seguida, vamos atualizar o **product-controller.js**
+
+<br>
+
+<code> src / repositories / **product-repository.js** </code>
+
+**product-repository.js**
+
+```js
+'use strict';
+const mongoose = require('mongoose');
+const Product = mongoose.model('Product'); // faz o acesso aos dados
+
+
+// POST - Create -> Criar um recurso (req)
+
+// 2.6. Criando um Produto (√)
+exports.create = (data) => {
+    var product = new Product(data); // criar instancia do product
+    return product.save();
+}
+
+// GET - Read (Ler) - Recuperar um recurso (req) ou uma coleção de recursos
+
+// 2.7. Listando os Produtos (√)
+exports.get = () => {
+    return Product.find({ active: true }, 'title price slug');
+}
+
+// 2.8. Listando um Produto pelo slug (√)
+exports.getBySlug = (slug) => {
+    return Product.findOne({ slug: req.params.slug, active: true }, 'title description price slug tags');
+}
+
+// 2.9. Listando um Produto pelo (√)
+exports.getById = (id) => {
+    return Product.findById(id);
+}
+
+// 2.10. Listando os Produtos de uma tag (√)
+exports.getByTag = (tag) => {
+    return Product.find({ tags: req.params.tag, active: true }, 'title description price slug tags')
+}
+
+// PUT - Update -> Atualizar um recurso (req)
+
+// 2.11. Atualizando um produto (√)
+exports.update = (id, data) => {
+    return Product
+        .findByIdAndUpdate(id, {
+            $set: {
+                title: data.title,
+                description: data.description,
+                price: data.price,
+                slug: data.slug
+            }
+        });
+}
+
+// 2.12. Excluindo um produto (√)
+exports.delete = (id) => {
+    return Product
+        .findOneAndRemove(req.body.id);
+}
+```
+
+<br>
+
+<code> src / controllers / **product-controller.js** </code>
+
+**product-controller.js**
+
+```js
+'use strict';
+
+// importações
+
+const mongoose = require('mongoose'); 
+
+const Product = mongoose.model('Product'); 
+
+const ValidationContract = require('../validators/fluent-validator'); 
+
+const repository = require('../repositories/product-repository'); 
+
+// POST - Create -> Criar um recurso (req)
+
+// 2.6. Criando um Produto (√)
+exports.post = (req, res, next) => {
+
+    let constract = new ValidationContract();
+    constract.hasMinLen(req.body.title, 3, 'O "title" deve conter pelo menos 3 caracteres');
+    constract.hasMinLen(req.body.slug, 3, 'O "slug" deve conter pelo menos 3 caracteres');
+    constract.hasMinLen(req.body.description, 3, 'O "description" deve conter pelo menos 3 caracteres');
+
+    // Se os dados forem inváligos
+    if (!constract.isValid()) {
+        res.status(400).send(constract.errors()).end();
+        return;
+    }
+
+    repository.create(req.body)
+        .then(x => {
+            res.status(201).send({ 
+                message: 'Produto cadastrado com sucesso!'
+            });
+        })
+        .catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao cadastrar ao produto!',
+                data: err
+            });
+    });
+}
+
+// GET - Read (Ler) - Recuperar um recurso (req) ou uma coleção de recursos
+
+// 2.7. Listando os Produtos (√)
+exports.get = (req, res, next) => {
+    repository.get()
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.8. Listando um Produto pelo (√)
+exports.getBySlug = (req, res, next) => {
+    repository.getBySlug(req.params.slug)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.9. Listando um Produto pelo Id (√)
+exports.getById = (req, res, next) => {
+    repository.getById(req.params.id)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// 2.10. Listando os Produtos de uma tag (√)
+exports.getByTag = (req, res, next) => {
+    repository.getByTag(req.params.tag)
+    .then(data => {
+        res.status(200).send(data);
+    })
+    .catch(err => {
+        res.status(400).send(err);
+    });
+}
+
+// PUT - Update -> Atualizar um recurso (req)
+
+// 2.11. Atualizando um produto (√)
+exports.put = (req, res, next) => {
+    repository.update(req.params.id, req.params.body)
+        .then(x => {
+            res.status(200).send({ message: 'Produto atualizado com sucesso!' });
+        })
+        .catch(err => {
+            res.status(400).send({ message: 'Falha ao atualizar produto!', data: err });
+        });
+}
+
+// DELETE - Delete -> Excluir um recurso (req)
+
+// 2.12. Excluindo um produto (√)
+exports.delete = (req, res, next) => {
+    repository.delete(req.body.id)
+        .then(x => {
+            res.status(200).send({ 
+                message: 'Produto removido com sucesso!' 
+            });
+        }).catch(err => {
+            res.status(400).send({ 
+                message: 'Falha ao remover produto!', 
+                data: err 
+            });
+        });
+}
+```
+
+## Postman &rarr; POST
+
+- Realizar os testes no Postman.
+
+
+POST &rarr; http://localhost:3000/products/ &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "title": "Cadeira Gamer",
+    "slug":  "cadeira-gamer",
+    "description": "Cadeira Game",
+    "price": "1299",
+    "active": true,
+    "tags": ["informatica", "cadeira", "game"],
+    "image": "image"
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Produto cadastrado com sucesso!"
+}
+```
+
+<br>
+
+GET &rarr; http://localhost:3000/products/ &rarr; Send
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+[
+    {
+        "_id": "627eb3a2426a2dce74990c55",
+        "title": "Mouse Gamer",
+        "slug": "mouse-gamer",
+        "price": 299
+    },
+    {
+        "_id": "627ebbe2f69a15eb94750e30",
+        "title": "Cadeira Gamer",
+        "slug": "cadeira-gamer",
+        "price": 1299
+    }
+]
+```
+
+## MongoDB
+
+- Collections
+  - Banco
+    - Products ( banco.products )
+
+<br>
+
+- Apresenta os 2 produtos "Mouse Game" e a "Cadeira Game".
+
+```js
+{"_id":{"$oid":"627eb3a2426a2dce74990c55"},"title":"Mouse Gamer","slug":"mouse-gamer","description":"Mouse Game","price":{"$numberInt":"299"},"active":true,"tags":["informatica","mouse","game"],"image":"image","__v":{"$numberInt":"0"}}
+```
+
+```js
+{"_id":{"$oid":"627ebbe2f69a15eb94750e30"},"title":"Cadeira Gamer","slug":"cadeira-gamer","description":"Cadeira Game","price":{"$numberInt":"1299"},"active":true,"tags":["informatica","cadeira","game"],"image":"image","__v":{"$numberInt":"0"}}
+```
+
+## Postman &rarr; PUT
+
+- Fazer um PUT, ou seja, Atualizar/Alterar a "Cadeira Gamer" que acabamos de criar.
+- Vamos utilizar o PUT &rarr; Update &rarr; Atualizar um recurso (req), a nossa "Cadeira Gamer" passando o seu "id".
+
+PUT &rarr; http://localhost:3000/products/ &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "title": "Cadeira Gamer",
+    "slug":  "cadeira-gamer",
+    "description": "Cadeira Game",
+    "price": "1299",
+    "active": true,
+    "tags": ["informatica", "cadeira", "game"],
+    "image": "image"
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Produto cadastrado com sucesso!"
+}
+```
+
+## Postman &rarr; PUT
+
+- Fazer um PUT, ou seja, Atualizar/Alterar a "Cadeira Gamer" que acabamos de criar para "Cadeira Gamer 2".
+- Vamos passar o "id", { "id": "627ebbe2f69a15eb94750e30" }
+
+PUT &rarr; http://localhost:3000/products/627ebbe2f69a15eb94750e30 &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "title": "Cadeira Gamer 2",
+    "description": "Cadeira Game 2",
+    "slug":  "cadeira-gamer-2",
+    "price": "2299"
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Produto atualizado com sucesso!"
+}
+```
+
+## Postman &rarr; GET
+
+GET &rarr; http://localhost:3000/products/ &rarr; Send
+
+- Repare que foi atualizado a "Cadeira Gamer" para "Cadeira Gamer 2".
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+[
+    {
+        "_id": "627eb3a2426a2dce74990c55",
+        "title": "Mouse Gamer",
+        "slug": "mouse-gamer",
+        "price": 299
+    },
+    {
+        "_id": "627ebbe2f69a15eb94750e30",
+        "title": "Cadeira Gamer 2",
+        "slug": "cadeira-gamer-2",
+        "price": 2299
+    }
+]
+```
+
+---
 
 ## 2.15. Async/Await
 
