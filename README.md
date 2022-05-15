@@ -119,8 +119,7 @@ Neste curso vamos unir a popularidade das APIs com a popularidade do JavaScript 
 2.15. Async/Await
 2.16. Revisitando os Models: Customer
 2.17. Revisitando os Models: Order
-2.18. Revisitando os Models: OrderItems
-2.19. Revisitando os Controllers: Customer
+2.18. Revisitando os Controllers: Customer
 2.20. Revisitando os Controllers: Order
 </a>
 
@@ -150,7 +149,7 @@ Neste curso vamos unir a popularidade das APIs com a popularidade do JavaScript 
 
 <span id="1">
 
-# 1. Instalação Node, NPM e VS 
+## 1. Instalação Node, NPM e VS 
 
 - Selecionar o diretorio para criar o projeto de instalação dos pacotes, por exemplo, uma pasta chamada Dev
 
@@ -670,7 +669,7 @@ yarn add nodemon -D
 
 <code> npx nodemon bin/server.js </code> 
 
-```node
+```js
 npx nodemon bin/server.js
 [nodemon] 2.0.16
 [nodemon] to restart at any time, enter `rs`
@@ -680,10 +679,12 @@ npx nodemon bin/server.js
 API rodando na porta 3000
 ```
 
+<br>
+
 ---
 <span id="2">
 
-# 2. REST e CRUD
+## 2. REST e CRUD
 
 ## 2.0 CRUD REST
 
@@ -1671,7 +1672,7 @@ exports.get = (req, res, next) => {
 }
 ```
 
-## Postman - Filtro dos produtos selecionados
+### Postman - Filtro dos produtos selecionados
 
 - Executamos o Filtro e o GET mostra os campos selecionados:
   - "title"
@@ -1741,7 +1742,7 @@ Atualizar o arquivo a rota ( **product-routes.js** ) para listar o produto pelo 
 router.get('/:slug', controller.getBySlug); 
 ```
 
-## Postman - Filtro / Listar os produtos pelo slug
+### Postman - Filtro / Listar os produtos pelo slug
 
 
 GET &rarr; http://localhost:3000/products/mouse-gamer &rarr; Send
@@ -1805,7 +1806,7 @@ exports.getBySlug = (req, res, next) => {
 }
 ```
 
-## Postman - Listar os produtos pelo slug (Product.findOne)
+### Postman - Listar os produtos pelo slug (Product.findOne)
 
 - Product.findOne( ... )
 
@@ -1890,7 +1891,7 @@ router.delete('/', controller.delete);      // DELETE - Delete -> Excluir um rec
 module.exports = router;                    //  exportar o modulo router
 ```
 
-## Postman - Listar os produtos pelo id
+### Postman - Listar os produtos pelo id
 
 ```js
   "_id": "627da2cd5346e6176f36fd41",
@@ -1961,7 +1962,7 @@ router.get('/admin/:id', controller.getById);   // 2.9. Listando um Produto pelo
 router.get('/tags/:tag', controller.getByTag);  // 2.10. Listando os Produtos de uma tag
 ```
 
-## Postman - Listando os produtos pela tag
+### Postman - Listando os produtos pela tag
 
 ```js
   "tags": 
@@ -2044,7 +2045,7 @@ O arquivo a rota ( **product-routes.js** ) do PUT já está atualizado.
 router.put('/:id', controller.put); 
 ```
 
-## Postman &rarr; PUT - Atualizando um produto 
+### Postman &rarr; PUT - Atualizando um produto 
 
 PUT &rarr; http://localhost:3000/products/627da2cd5346e6176f36fd41 &rarr; Send
 
@@ -2074,7 +2075,7 @@ PUT &rarr; http://localhost:3000/products/627da2cd5346e6176f36fd41 &rarr; Send
 ```
 
 
-## Postman &rarr; GET - Verificando se o produto foi atualizado 
+### Postman &rarr; GET - Verificando se o produto foi atualizado 
 
 GET &rarr; http://localhost:3000/products/ &rarr; Send
 
@@ -2318,7 +2319,7 @@ DELETE &rarr; http://localhost:3000/products/ &rarr; Send
 }
 ```
 
-## MongoDB
+### MongoDB
 
 - Será deletado o nosso produto no MongoDB, da tabela (banco.products)
 - Assim, não será apresentado nenhum produto nosso banco de dados, MongoDB.
@@ -2558,7 +2559,7 @@ exports.delete = (req, res, next) => {
 ```
 
 
-## Postman &rarr; POST (Validação)
+### Postman &rarr; POST (Validação)
 
 POST &rarr; http://localhost:3000/products/
 
@@ -2838,7 +2839,7 @@ exports.delete = (req, res, next) => {
 }
 ```
 
-## Postman &rarr; POST
+### Postman &rarr; POST
 
 - Realizar os testes no Postman.
 
@@ -2894,7 +2895,7 @@ GET &rarr; http://localhost:3000/products/ &rarr; Send
 ]
 ```
 
-## MongoDB
+### MongoDB
 
 - Collections
   - Banco
@@ -2912,7 +2913,7 @@ GET &rarr; http://localhost:3000/products/ &rarr; Send
 {"_id":{"$oid":"627ebbe2f69a15eb94750e30"},"title":"Cadeira Gamer","slug":"cadeira-gamer","description":"Cadeira Game","price":{"$numberInt":"1299"},"active":true,"tags":["informatica","cadeira","game"],"image":"image","__v":{"$numberInt":"0"}}
 ```
 
-## Postman &rarr; PUT
+### Postman &rarr; PUT
 
 - Fazer um PUT, ou seja, Atualizar/Alterar a "Cadeira Gamer" que acabamos de criar.
 - Vamos utilizar o PUT &rarr; Update &rarr; Atualizar um recurso (req), a nossa "Cadeira Gamer" passando o seu "id".
@@ -2945,7 +2946,7 @@ PUT &rarr; http://localhost:3000/products/ &rarr; Send
 }
 ```
 
-## Postman &rarr; PUT
+### Postman &rarr; PUT
 
 - Fazer um PUT, ou seja, Atualizar/Alterar a "Cadeira Gamer" que acabamos de criar para "Cadeira Gamer 2".
 - Vamos passar o "id", { "id": "627ebbe2f69a15eb94750e30" }
@@ -2975,7 +2976,7 @@ PUT &rarr; http://localhost:3000/products/627ebbe2f69a15eb94750e30 &rarr; Send
 }
 ```
 
-## Postman &rarr; GET
+### Postman &rarr; GET
 
 GET &rarr; http://localhost:3000/products/ &rarr; Send
 
@@ -3393,7 +3394,7 @@ exports.delete = async(req, res, next) => {
 }
 ```
 
-## Postman &rarr; CRUD
+### Postman &rarr; CRUD
 
 - Realizar todos os testes de validação no Postman.
 
@@ -3401,13 +3402,702 @@ exports.delete = async(req, res, next) => {
 
 ## 2.16. Revisitando os Models: Customer
 
+- Vamos criar o customer-models.
+
+  - No diretório <code> src /  models </code>
+
+    - Criar um arquivo <code> **customer-models.js** </code>
+
+<br>
+
+### customer-models.js
+
+```js
+'use strict';
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const schema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
+});
+
+module.exports = mongoose.model('Customer', schema);
+```
+
+### Importar o arquivo (customer-model) no App
+
+- Atualizar o arquivo **app.js** <code> src / app.js </code> para realizar a importação do customer-model que foi criado anteriormente.
+
+### src / app.js
+
+- Adicionar para carregar os Models, conforme o exemplo abaixo:
+
+```js
+// Carrega os Models
+const Product = require('./models/product-model');
+const Customer = require('./models/customer-model');
+```
+
+---
+
 ## 2.17. Revisitando os Models: Order
 
-## 2.18. Revisitando os Models: OrderItems
+- Vamos criar o order-models.
 
-## 2.19. Revisitando os Controllers: Customer
+  - No diretório <code> src /  models </code>
+
+    - Criar um arquivo <code> **order-models.js** </code>
+
+<br>
+
+### order-models.js
+
+```js
+'use strict';
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const schema = new Schema({
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Customer'
+    },
+    number: {
+        type: String,
+        required: true
+    },
+    createDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ['created', 'done'],
+        default: 'created'
+    },
+    items: [{
+        quantity: {
+            type: Number,
+            required: true,
+            default: 1
+        },
+        price: {
+            type: Number,
+            required: true
+        },
+        product: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        }
+    }],
+});
+
+module.exports = mongoose.model('Order', schema);
+```
+
+### Importar o arquivo (order-model) no App
+
+- Atualizar o arquivo **app.js** <code> src / app.js </code> para realizar a importação do order-model que foi criado anteriormente.
+
+### src / app.js
+
+- Adicionar para carregar os Models, conforme o exemplo abaixo:
+
+```js
+// Carrega os Models
+const Product = require('./models/product-model');
+const Customer = require('./models/customer-model');
+const Order = require('./models/order-model');
+```
+
+---
+
+## 2.18. Revisitando os Controllers: Customer
+
+### customer-repository.js
+
+- Vamos criar o customer-repository.
+
+  - No diretório <code> src / repositories </code>
+
+    - Criar um arquivo <code> **customer-repository.js** </code>
+
+<br>
+
+```js
+'use strict';
+const mongoose = require('mongoose');
+const Customer = mongoose.model('Customer');
+
+exports.create = async(data) => {
+    var customer = new Customer(data);
+    await customer.save();
+}
+
+exports.authenticate = async(data) => {
+    const res = await Customer.findOne({
+        email: data.email,
+        password: data.password
+    });
+    return res;
+}
+
+exports.getById = async(id) => {
+    const res = await Customer.findById(id);
+    return res;
+}
+```
+
+<br>
+
+### customer-controller.js
+
+- Vamos criar o customer-controller.
+
+  - No diretório <code> src / controllers </code>
+
+    - Criar um arquivo <code> **customer-controller.js** </code>
+
+
+```js
+'use strict';
+
+const ValidationContract = require('../validators/fluent-validator');
+const repository = require('../repositories/customer-repository');
+
+exports.post = async(req, res, next) => {
+    let contract = new ValidationContract();
+    contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres');
+    contract.isEmail(req.body.email, 'E-mail inválido');
+    contract.hasMinLen(req.body.password, 6, 'A senha deve conter pelo menos 6 caracteres');
+
+    // Se os dados forem inválidos
+    if (!contract.isValid()) {
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
+    try {
+        await repository.create(req.body);
+        res.status(201).send({ message: 'Prduto cadastrado com sucesso!' })
+    } catch (e) {
+        res.status(500).send({ message: 'Falha ao processar sua requisição' });
+    }
+};
+
+```
+
+<br>
+
+### customer-route.js
+
+- Vamos criar o customer-router.
+
+  - No diretório <code> src / routes </code>
+
+    - Criar um arquivo <code> **customer-route.js** </code>
+
+
+```js
+'use strict';
+
+const express = require('express');
+const router = express.Router();
+const controller = require('../controllers/customer-controller');
+
+router.post('/', controller.post);
+
+module.exports = router;
+```
+
+<br>
+
+### Atualizar o arquivo <code> App.js </code>
+
+- Atualizar o arquivo **app.js** <code> src / app.js </code> para carregar as rotas criadas anteriormente pelo  **customerRoute**.
+
+### src / app.js
+
+```js
+// Carrega os Models
+const Product = require('./models/product-model');
+const Customer = require('./models/customer-model');
+const Order = require('./models/order-model');
+
+// Carrega as Rotas
+const indexRoute = require('./routes/index-route');
+const productRoute = require('./routes/product-route');
+const customerRoute = require('./routes/customer-route'); // customerRoute
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+app.use('/', indexRoute);
+app.use('/products', productRoute);
+app.use('/customers', customerRoute); // customerRoute
+
+module.exports = app; //  exportar o modulo app
+```
+
+### Postman &rarr; POST
+
+- Realizar os testes no Postman.
+
+
+POST &rarr; http://localhost:3000/customers &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "name": "Eduardo Rodrigues",
+    "email": "teste@teste.com",
+    "password": "teste123"
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Cliente cadastrado com sucesso!"
+}
+```
+
+### MongoDB
+
+ - Foi cadastrado com sucesso a tabela <code> banco.customers </code> no MongoDB.
+
+```json
+ {
+    "name":"Eduardo Rodrigues",
+    "email":"teste@teste.com",
+    "password":"teste123"
+ }
+```
+
+---
 
 ## 2.20. Revisitando os Controllers: Order
+
+Vamos criar o arquivo:
+
+<code> src / repositories / **order-repository.js** </code>
+
+### order-repository.js
+
+```js
+'use strict';
+const mongoose = require('mongoose');
+const Order = mongoose.model('Order');
+
+exports.get = async(data) => {
+    var res = await Order.find({ });
+    return res;
+}
+
+exports.create = async(data) => {
+    var order = new Order(data);
+    await order.save();
+}
+```
+
+### Instalar o pacote guid
+
+Package Guid será utilizado para poder gerar um número para o pedido.
+
+```js
+eduardo@MacBook node-str % npm install guid --save 
+```
+
+
+
+Vamos criar o arquivo:
+
+
+<code> src / controllers / **order-controller.js** </code>
+
+### order-controller.js
+
+```js
+'use strict';
+
+const repository = require('../repositories/order-repository');
+const guid = require('guid'); 
+
+exports.get = async(req, res, next) => {
+    try {
+        var data = await repository.get();
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição'
+        });
+    }
+}
+
+exports.post = async(req, res, next) => {
+    try {
+
+        await repository.create({
+            // 0customer: data.id, 
+            customer: req.body.customer;
+            number: guid.raw().substring(0, 6),
+            items: req.body.items
+        });
+        res.status(201).send({
+            message: 'Pedido cadastrado com sucesso!'
+        });
+    } catch (e) {
+        // console.log(e);
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição'
+        });
+    }
+}
+```
+
+Vamos criar o arquivo order-route.js
+
+<code> src / routes / order-route.js </code>
+
+### order-route
+
+```js
+'use strict';
+
+const express = require('express');
+const router = express.Router();
+const controller = require('../controllers/order-controller');
+
+router.get('/', authService.authorize, controller.get);
+router.post('/', authService.authorize, controller.post);
+
+module.exports = router;
+```
+
+<br>
+
+
+### Atualizar o arquivo <code> App.js </code>
+
+- Atualizar o arquivo **app.js** <code> src / app.js </code> para carregar as rotas criadas anteriormente pelo  **customerRoute**.
+
+### src / app.js
+
+```js
+'use strict';
+
+const express = require('express');
+
+const bodyParser = require('body-parser');
+
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const app = express(); // Criar um servidor Web
+
+const router = express.Router(); // Criar as Rotas
+
+// Conecta ao banco
+mongoose.connect(); // acesso ao MongoDB, copiar e colar
+
+
+// Carrega os Models
+const Product = require('./models/product-model');
+const Customer = require('./models/customer-model');
+const Order = require('./models/order-model');
+
+// Carrega as Rotas
+const indexRoute = require('./routes/index-route');
+const productRoute = require('./routes/product-route');
+const customerRoute = require('./routes/customer-route');
+const orderRoute = require('./routes/order-route'); 
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/', indexRoute);
+app.use('/products', productRoute);
+app.use('/customers', customerRoute);
+app.use('/orders', orderRoute);
+
+module.exports = app; //  exportar o modulo app
+```
+
+<br>
+
+### Postman &rarr; POST
+
+- Realizar os testes no Postman.
+
+
+POST &rarr; http://localhost:3000/orders &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "name": "Eduardo Rodrigues",
+    "email": "teste@teste.com",
+    "password": "teste123"
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Cliente cadastrado com sucesso!"
+}
+```
+
+
+### Postman &rarr; POST
+
+- Realizar os testes no Postman.
+
+
+POST &rarr; http://localhost:3000/orders &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "customer": "62810dbd9b7b6b566458e533",
+    "items": [
+        {
+            "quantity": "1",
+            "price": "299",
+            "product": "627eb3a2426a2dce74990c55"
+        }
+    ]
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Pedido cadastrado com sucesso!"
+}
+```
+
+### MongoDB
+
+ - Foi cadastrado com sucesso na tabela <code> banco.orders </code> no MongoDB.
+
+```json
+{
+    "_id":{"$oid":"62811cc7ab62b9a8601af718"},
+    "customer":{"$oid":"62810dbd9b7b6b566458e533"},
+    "number":"a51220",
+    "status":"created",
+    "items":[
+        {"quantity":{"$numberInt":"1"},
+        "price":{"$numberInt":"299"},
+        "product":{"$oid":"627eb3a2426a2dce74990c55"},
+        "_id":{"$oid":"62811cc7ab62b9a8601af719"}
+        }],
+    "createDate":{"$date":{"$numberLong":"1652628679546"}},
+    "__v":{"$numberInt":"0"}
+    }
+```
+
+### Postman &rarr; GET
+
+Repare que faltou apresentar as informações do produto e cliente. 
+
+Vamos usar uma função populate('customer') para o GET apresentar os campos que será configurada no arquivo <code> order-repository.js </code>
+
+GET &rarr; http://localhost:3000/orders &rarr; Send
+
+- **res** (resposta) (**REQUEST**)
+
+
+```js
+[
+    {
+        "_id": "62811cc7ab62b9a8601af718",
+        "customer": "62810dbd9b7b6b566458e533",
+        "number": "a51220",
+        "status": "created",
+        "items": [
+            {
+                "quantity": 1,
+                "price": 299,
+                "product": "627eb3a2426a2dce74990c55",
+                "_id": "62811cc7ab62b9a8601af719"
+            }
+        ],
+        "createDate": "2022-05-15T15:31:19.546Z",
+        "__v": 0
+    }
+]
+```
+
+### order-repository.js 
+
+```js
+'use strict';
+const mongoose = require('mongoose');
+const Order = mongoose.model('Order');
+
+exports.get = async(data) => {
+    var res = await Order.find({ }).populate('customer').populate('items.product');
+    return res;
+}
+
+exports.create = async(data) => {
+    var order = new Order(data);
+    await order.save();
+}
+```
+
+### Postman &rarr; GET
+
+
+Após configurar a função populate(), mostra os campos preenchidos:
+
+```js
+exports.get = async(data) => {
+    var res = await Order.find({ }).populate('customer').populate('items.product');
+    return res;
+}
+```
+
+GET &rarr; http://localhost:3000/orders &rarr; Send
+
+- **res** (resposta) (**REQUEST**)
+
+
+```js
+[
+    {
+        "_id": "62811cc7ab62b9a8601af718",
+        "customer": {
+            "_id": "62810dbd9b7b6b566458e533",
+            "name": "Eduardo Rodrigues",
+            "email": "teste@teste.com",
+            "password": "teste123",
+            "__v": 0
+        },
+        "number": "a51220",
+        "status": "created",
+        "items": [
+            {
+                "quantity": 1,
+                "price": 299,
+                "product": {
+                    "_id": "627eb3a2426a2dce74990c55",
+                    "title": "Mouse Gamer",
+                    "slug": "mouse-gamer",
+                    "description": "Mouse Game",
+                    "price": 299,
+                    "active": true,
+                    "tags": [
+                        "informatica",
+                        "mouse",
+                        "game"
+                    ],
+                    "image": "image",
+                    "__v": 0
+                },
+                "_id": "62811cc7ab62b9a8601af719"
+            }
+        ],
+        "createDate": "2022-05-15T15:31:19.546Z",
+        "__v": 0
+    }
+]
+```
+
+### Filtrar a nossa busca order-repository
+
+Apresentar somente os produtos que forem selecionados no método find()
+
+<code> src / repositories / **order-repository.js** </code>
+
+### order-repository.js
+
+```js
+'use strict';
+const { status } = require('express/lib/response');
+const mongoose = require('mongoose');
+const Order = mongoose.model('Order');
+
+exports.get = async(data) => {
+    var res = await Order.find({ }, 'number status customer items' )
+    .populate('customer', 'name')
+    .populate('items.product', 'title');
+    return res;
+}
+
+exports.create = async(data) => {
+    var order = new Order(data);
+    await order.save();
+}
+```
+
+### Postman &rarr; GET
+
+GET &rarr; http://localhost:3000/orders &rarr; Send
+
+- **res** (resposta) (**REQUEST**)
+
+```js
+[
+    {
+        "_id": "62811cc7ab62b9a8601af718",
+        "customer": {
+            "_id": "62810dbd9b7b6b566458e533",
+            "name": "Eduardo Rodrigues"
+        },
+        "number": "a51220",
+        "status": "created",
+        "items": [
+            {
+                "quantity": 1,
+                "price": 299,
+                "product": {
+                    "_id": "627eb3a2426a2dce74990c55",
+                    "title": "Mouse Gamer"
+                },
+                "_id": "62811cc7ab62b9a8601af719"
+            }
+        ]
+    }
+]
+```
+
 
 ---
 

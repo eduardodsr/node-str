@@ -5,6 +5,17 @@ Você pode assistir os vídeos deste curso sendo um assinante do site http://bal
 
 http://player.balta.io/#/courses/1972
 
+### LINKs
+
+https://woliveiras.com.br/posts/construindo-uma-api-com-node-js-parte-1-criando-e-listando-dados/
+https://dev.enchant.com/api/v1#auth
+https://expressjs.com/pt-br/guide/routing.html
+https://balta.io/blog/mongodb-docker
+https://www.hostinger.com.br/tutoriais/api-restful
+https://www.brunobrito.net.br/api-restful-boas-praticas/
+
+
+
 ### Sumário
 Neste curso vamos unir a popularidade das APIs com a popularidade do JavaScript criando uma API completa com NodeJs, passando pelos principais pontos que você precisa conhecer para colocar seu projeto em produção.
 
