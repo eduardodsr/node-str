@@ -75,3 +75,5 @@ typings/
 **/.zip
 1972-master.zip
 
+# config
+config.js

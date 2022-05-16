@@ -126,8 +126,6 @@ Neste curso vamos unir a popularidade das APIs com a popularidade do JavaScript 
 ### 3. Melhorando a API
 <a href="#3">3.1. Arquivo de Configurações
 3.2. Encriptando a senha
-3.3. Enviando E-mail de Boas Vindas
-3.4. Upload da Imagem do Produto
 </a>
 
 ### 4. Segurança
@@ -1297,7 +1295,7 @@ const app = express(); // Criar um servidor Web
 const router = express.Router(); // Criar as Rotas
 
 // Conecta ao banco
-mongoose.connect('mongodb+srv://<user>:<password>@cluster0.1qi3y.mongodb.net/<banco>?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://<user>:<password>@<conf_mongodb>');
 
 // Carrega as Rotas
 const indexRoute = require('./routes/index-route');
@@ -4107,11 +4105,95 @@ GET &rarr; http://localhost:3000/orders &rarr; Send
 
 ## 3.1. Arquivo de Configurações
 
+- Vamos criar o config.js que vai armazenar as nossas configurações a API.
+
+  - No diretório <code> src</code>
+
+    - Criar um arquivo <code> **cconfig.js** </code>
+
+```js
+module.exports = {
+    connectionString: 'mongodb+srv://<user>:<password>@<url_mongodb.net>/<name>',
+}
+```
+
+<br>
+
+- Vamos atualizar o nosso App.js para importar as nossas configurações a API.
+
+  - No diretório <code> src</code>
+
+    - Atualizar o arquivo <code> **App.js** </code>
+
+```js
+'use strict';
+
+const config = require('./config'); // importar o arquivo config.js
+
+// Connecta ao banco
+mongoose.connect(config.connectionString);
+```
+
+
 ## 3.2. Encriptando a senha
 
-## 3.3. Enviando E-mail de Boas Vindas
+Instalar o pacote md5
 
-## 3.4. Upload da Imagem do Produto
+```js
+npm install md5 --save
+```
+
+- A nossa tabela de customer não estava Criptografando a senha do usuário.
+- Vamos atualizar o customer-controller.js para importar o md5.
+
+Segue o nosso <code> customer-controller.js </code> atualizado:
+
+```js
+const md5 = require('md5');
+
+```
+
+### Postman &rarr; POST
+
+- Realizar os testes no Postman.
+
+
+POST &rarr; http://localhost:3000/orders &rarr; Send
+
+- **req** (requisição) (**REQUEST**)
+  - raw
+  - JSON
+
+<br>
+
+```js
+{
+    "name": "Eduardo Rodrigues",
+    "email": "teste@teste.com",
+    "password": "teste123"
+}
+```
+
+- **res** (resposta) (**RESPONSE**)
+
+```json
+{
+    "message": "Cliente cadastrado com sucesso!"
+}
+```
+
+### MongoDB
+
+Portanto, com a utilização do pacote md5, a senha foi Criptografada com sucesso.
+
+```js
+{"_id":{
+    "name":"Eduardo Rodrigues",
+    "email":"teste@teste.com",
+    "password":"aa1bf4646de67fd9086cf6c79007026c",
+    }
+}
+```
 
 ---
 <span id="4">
@@ -4120,19 +4202,71 @@ GET &rarr; http://localhost:3000/orders &rarr; Send
 
 ## 4.1. Autenticação
 
-## 4.2. Recuperando dados do usuário logado
+JWT (JSON Web Token - Autenticação e Segurança) 
 
-## 4.3. Refresh Token
+### Já ouviu falar de JWT? 
+Seja na autenticação ou na transmissão de informações com segurança esse tem sido uma das melhores tecnologias utilizadas pelos sistemas. 
+Todo programador precisa conhecer a abordagem do JSON Web Token e é exatamente isso que vamos te mostrar nesse vídeo.
 
-## 4.4. Autorização
+https://www.treinaweb.com.br/blog/o-que-e-jwt
+
+https://medium.com/trainingcenter/jwt-usando-tokens-para-comunica%C3%A7%C3%A3o-eficiente-cf0551c0dd99
+
+Links Citados
+→  Token: https://youtu.be/LtVb9rhU41c
+→  JSON: https://youtu.be/P81dE-tkaaA
+→  OAuth2: https://youtu.be/z-RuvnMlw34
+→  Site Oficial: https://jwt.io/
+→  Validador JWT: ​​https://jwt.io/#debugger-io
+
+
+
+### Instalar o JWT (JSON Web Token - Autenticação e Segurança) 
+
+Instalar o pacote npm i jsonwebtoken
+
+```js
+npm i jsonwebtoken
+```
+
+- Vamos criar o arquivo <code> src / services / auth-services.js </code>
+
+### auth-services.js
+
+```js
+
+'use strict';
+const jwt = require('jsonwebtoken');
+
+exports.generateToken = async (data) => {
+    return jwt.sign(data, global.SALT_KEY, { expiresIn: '1d' });
+}
+
+exports.decodeToken = async (token) => {
+    var data = await jwt.verify(token, global.SALT_KEY);
+    return data;
+}
+
+exports.authorize = function (req, res, next) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    if (!token) {
+        res.status(401).json({
+            message: 'Acesso Restrito'
+        });
+    } else {
+        jwt.verify(token, global.SALT_KEY, function (error, decoded) {
+            if (error) {
+                res.status(401).json({
+                    message: 'Token Inválido'
+                });
+            } else {
+                next();
+            }
+        });
+    }
+};
+
+```
 
 ---
-<span id="5">
-
-# 5. Outros
-
-## 5.1. Outros
-
-## 5.2. Publicando a API
-
-## 5.3. Conclusão

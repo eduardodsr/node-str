@@ -18,13 +18,15 @@ exports.get = async(req, res, next) => {
 
 exports.post = async(req, res, next) => {
     try {
+
+        // Recupera o Token
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
         
-        //const token = req.body.token || req.query.token || req.headers['x-access-token'];
-        // const data = await authService.decodeToken(token);
+        // Decodifica o Token
+        const data = await authService.decodeToken(token);
 
         await repository.create({
-            // customer: data.id, 
-            customer: req.body.customer,
+            customer: data.id, // customer: req.body.customer,
             number: guid.raw().substring(0, 6),
             items: req.body.items
         });
