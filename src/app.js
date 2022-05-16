@@ -15,12 +15,6 @@ const router = express.Router(); // Criar as Rotas
 // Connecta ao banco
 mongoose.connect(config.connectionString);
 
-// Conecta ao banco
-// mongoose.connect('mongodb+srv://admin:admin@cluster0.1qi3y.mongodb.net/banco?retryWrites=true&w=majority');
-
-// Conecta ao banco MongoDB - Docker
-// mongoose.connect('mongodb://docker:mongopw@localhost:55007');
-
 // Carrega os Models
 const Product = require('./models/product-model');
 const Customer = require('./models/customer-model');
