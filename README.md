@@ -130,15 +130,6 @@ Neste curso vamos unir a popularidade das APIs com a popularidade do JavaScript 
 
 ### 4. Segurança
 <a href="#4">4.1. Autenticação
-4.2. Recuperando dados do usuário logado
-4.3. Refresh Token
-4.4. Autorização
-</a>
-
-#### 5. Outros
-<a href="#5">5.1. Outros
-5.2. Publicando a API
-5.3. Conclusão
 </a>
 
 ---
@@ -4213,11 +4204,11 @@ https://www.treinaweb.com.br/blog/o-que-e-jwt
 https://medium.com/trainingcenter/jwt-usando-tokens-para-comunica%C3%A7%C3%A3o-eficiente-cf0551c0dd99
 
 Links Citados
-→  Token: https://youtu.be/LtVb9rhU41c
-→  JSON: https://youtu.be/P81dE-tkaaA
-→  OAuth2: https://youtu.be/z-RuvnMlw34
-→  Site Oficial: https://jwt.io/
-→  Validador JWT: ​​https://jwt.io/#debugger-io
+- →  Token: https://youtu.be/LtVb9rhU41c
+- →  JSON: https://youtu.be/P81dE-tkaaA
+- →  OAuth2: https://youtu.be/z-RuvnMlw34
+- →  Site Oficial: https://jwt.io/
+- →  Validador JWT: ​​https://jwt.io/#debugger-io
 
 
 
